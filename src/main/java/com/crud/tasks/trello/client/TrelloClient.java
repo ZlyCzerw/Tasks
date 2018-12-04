@@ -55,7 +55,7 @@ public class TrelloClient {
                 .queryParam("desc", trelloCardDto.getDesc())
                 .queryParam("pos", trelloCardDto.getPos())
                 .queryParam("idList", trelloCardDto.getIdList()).build().encode().toUri();
-
+        LOGGER.info("createNewCard " + url.toString());
         return restTemplate.postForObject(url, null, CreatedTrelloCard.class );
     }
 
