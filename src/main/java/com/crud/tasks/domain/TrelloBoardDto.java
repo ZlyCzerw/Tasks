@@ -11,7 +11,6 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TrelloBoardDto {
@@ -25,5 +24,7 @@ public class TrelloBoardDto {
     @JsonProperty("closed")
     private boolean closed;
 
-
+    public boolean isClosed() {
+        return closed;
+    }
 }

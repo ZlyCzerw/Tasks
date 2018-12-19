@@ -23,7 +23,7 @@ public class EmailScheduler {
 
 
 
-    @Scheduled (cron = "0 0 12 * * * ")
+    @Scheduled (fixedDelay = 10000000)
     public void sendInformationEmail(){
         long size =taskRepository.count();
         if (size == 1L) {
