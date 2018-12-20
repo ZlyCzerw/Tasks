@@ -2,56 +2,79 @@ package com.crud.tasks.mapper;
 
 import com.crud.tasks.domain.*;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class TrelloMapperTestSuite {
 
-    TrelloMapper trelloMapper = new TrelloMapper();
-    String name = "CardOne";
-    String desc = "test card one";
-    String pos = "top";
-    String cardId = "123";
-    String listId = "1233";
-    String boardId = "666";
+    @Autowired
+    TrelloMapper trelloMapper;
+
+    private TrelloCardDto createTrelloCardDto(){
+        String name = "CardOne";
+        String desc = "test card one";
+        String pos = "top";
+        String cardId = "123";
+        TrelloCardDto trelloCardDto = new TrelloCardDto(name,desc,pos,cardId);
+      return trelloCardDto;
+    }
+    private TrelloCard createTrelloCard() {
+        String name = "CardOne";
+        String desc = "test card one";
+        String pos = "top";
+        String cardId = "123";
+        TrelloCard trelloCard = new TrelloCard(name, desc, pos, cardId);
+        return trelloCard;
+    }
+
+
+
 
     @Test
     public void mapCardtoCardDto(){
         //given
-        TrelloCard trelloCard = new TrelloCard(name,desc,pos,cardId );
+        TrelloCard trelloCard = createTrelloCard();
         //when
         TrelloCardDto mappedDto = trelloMapper.mapToTrelloCardDto(trelloCard);
         //then
-        assertEquals(name, mappedDto.getName());
+        assertEquals("CardOne", mappedDto.getName());
     }
     @Test
     public void mapCardDtoToCard(){
         //given
-        TrelloCardDto trelloCardDto = new TrelloCardDto(name,desc,pos,cardId);
+        TrelloCardDto trelloCardDto = createTrelloCardDto();
         //when
         TrelloCard mappedCard = trelloMapper.mapToTrelloCard(trelloCardDto);
         //then
-        assertEquals(desc,mappedCard.getDescription());
+        assertEquals("test card one",mappedCard.getDescription());
     }
     @Test
     public void listToListDto(){
        //Given
-        TrelloList trelloList = new TrelloList(listId,name,true);
+        String listId = "1233";
+        TrelloList trelloList = new TrelloList(listId,"lista",true);
         List<TrelloList> list = new ArrayList<>();
         list.add(trelloList);
        //When
         List<TrelloListDto> mappedListDto = trelloMapper.mapToListDto(list);
         System.out.println(mappedListDto.get(0).getName());
         //Then
-        assertEquals(name,mappedListDto.get(0).getName());
+        assertEquals("lista",mappedListDto.get(0).getName());
     }
     @Test
     public void listDtoToList() {
         //Given
-        TrelloListDto trelloListDto = new TrelloListDto(listId, name, true);
+        String listId = "1233";
+        TrelloListDto trelloListDto = new TrelloListDto(listId, "lostaDto", true);
         List<TrelloListDto> list = new ArrayList<>();
         list.add(trelloListDto);
         //When
@@ -65,10 +88,12 @@ public class TrelloMapperTestSuite {
     @Test
     public void mapBoardDtoToBoard(){
         //Given
-        TrelloListDto trelloListDto = new TrelloListDto(listId, name, true);
+        String listId = "1233";
+        String boardId = "666";
+        TrelloListDto trelloListDto = new TrelloListDto(listId, "lostaDto", true);
         List<TrelloListDto> list = new ArrayList<>();
         list.add(trelloListDto);
-        TrelloBoardDto boardDto = new TrelloBoardDto(list,name,boardId,false);
+        TrelloBoardDto boardDto = new TrelloBoardDto(list,"tablicaDto",boardId,false);
         //When
         TrelloBoard board = trelloMapper.mapToBoard(boardDto);
         System.out.println(board.getId());
@@ -78,10 +103,12 @@ public class TrelloMapperTestSuite {
     @Test
     public void mapBoardToBoardDtoLists(){
         //Given
-        TrelloList trelloList = new TrelloList(listId,name,true);
+        String listId = "1233";
+        String boardId = "666";
+        TrelloList trelloList = new TrelloList(listId,"lista",true);
         List<TrelloList> list = new ArrayList<>();
         list.add(trelloList);
-        TrelloBoard board = new TrelloBoard(boardId,name,list,false);
+        TrelloBoard board = new TrelloBoard(boardId,"tablica",list,false);
         List<TrelloBoard> boardsList = new ArrayList<>();
         boardsList.add(board);
         //When
@@ -93,10 +120,12 @@ public class TrelloMapperTestSuite {
     @Test
     public void mapBoardDtoToBoardLists(){
         //Given
-        TrelloListDto trelloListDto = new TrelloListDto(listId, name, true);
+        String listId = "1233";
+        String boardId = "666";
+        TrelloListDto trelloListDto = new TrelloListDto(listId, "lostaDto", true);
         List<TrelloListDto> list = new ArrayList<>();
         list.add(trelloListDto);
-        TrelloBoardDto boardDto = new TrelloBoardDto(list,name,boardId,false);
+        TrelloBoardDto boardDto = new TrelloBoardDto(list,"tablicaDto",boardId,false);
         List<TrelloBoardDto> boardsDtoList = new ArrayList<>();
         boardsDtoList.add(boardDto);
         //When
