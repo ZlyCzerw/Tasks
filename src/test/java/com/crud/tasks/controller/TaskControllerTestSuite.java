@@ -92,15 +92,15 @@ public class TaskControllerTestSuite {
         //Given
         TaskDto taskDto = new TaskDto(1L,"task","123");
         Task task = taskMapper.mapToTask(taskDto);
+        when(taskMapper.mapToTaskDto(dbService.saveTask(task))).thenReturn(taskDto);
         Gson gson = new Gson();
         String jsonContent = gson.toJson(taskDto);
-        when(taskMapper.mapToTaskDto(dbService.saveTask(task))).thenReturn(taskDto);
         //When & Then
         mockMvc.perform(post("/v1/task/createTask").contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.taskId",is("1")));
+                .andExpect(jsonPath("$.title",is("task")));
     }
 
 
