@@ -23,14 +23,11 @@ public class EmailScheduler {
 
 
 
-    @Scheduled (fixedDelay = 10000000)
+    @Scheduled (fixedDelay = 8640000)
     public void sendInformationEmail(){
         long size =taskRepository.count();
-        if (size == 1L) {
-            simpleEmailService.send(new Mail(adminConfig.getAdminMail(), SUBJECT, "Courently you've got: " + size + " task.", null));
-        }else {
-            simpleEmailService.send(new Mail(adminConfig.getAdminMail(), SUBJECT, "Courently you've got: " + size + " tasks.", null));
-        }
+        String taskForm = (size == 1) ? " task" : " tasks" ;
+        simpleEmailService.send(new Mail(adminConfig.getAdminMail(), SUBJECT, "Courently you've got: " + size + taskForm, null));
     }
 
 

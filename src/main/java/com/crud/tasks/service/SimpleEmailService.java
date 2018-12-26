@@ -38,6 +38,7 @@ public class SimpleEmailService {
             mailMessage.setCc(mail.getToCc());
         }
         return mailMessage;
+
     }
 
 
