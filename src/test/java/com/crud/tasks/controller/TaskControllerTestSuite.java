@@ -7,6 +7,7 @@ import com.crud.tasks.domain.TrelloBoardDto;
 import com.crud.tasks.mapper.TaskMapper;
 import com.crud.tasks.service.DBService;
 import com.google.gson.Gson;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -66,7 +68,7 @@ public class TaskControllerTestSuite {
     @Test
     public void shouldUpdateTask()  throws Exception{
         //Given
-        TaskDto taskDto = new TaskDto(1L,"task","123");
+        TaskDto taskDto = new TaskDto(1L,"task23","123");
         Task task = taskMapper.mapToTask(taskDto);
         when(taskMapper.mapToTaskDto(dbService.saveTask(task))).thenReturn(taskDto);
         Gson gson = new Gson();
@@ -76,7 +78,7 @@ public class TaskControllerTestSuite {
         mockMvc.perform(put("/v1/task/updateTask").contentType(MediaType.APPLICATION_JSON)
                 .content(jsonContent))
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("$.title",is("task")));
+                .andExpect(jsonPath("$.title",is("task23")));
     }
     @Test
     public void shouldDeleteTask() throws Exception{
@@ -92,7 +94,10 @@ public class TaskControllerTestSuite {
         //Given
         TaskDto taskDto = new TaskDto(1L,"task","123");
         Task task = taskMapper.mapToTask(taskDto);
-        when(taskMapper.mapToTaskDto(dbService.saveTask(task))).thenReturn(taskDto);
+        when(taskMapper.mapToTaskDto(dbService.saveTask(anyObject()))).thenReturn(taskDto);
+        when(dbService.saveTask(anyObject())).thenReturn(new Task(1L, "task", "123"));
+        when (taskMapper.mapToTask(anyObject())).thenReturn(new Task(1L, "task", "123"));
+        when(taskMapper.mapToTaskDto(anyObject())).thenReturn(taskDto);
         Gson gson = new Gson();
         String jsonContent = gson.toJson(taskDto);
         //When & Then
