@@ -46,13 +46,19 @@ public class TaskControllerTestSuite {
     public void shouldGetTasks() throws Exception{
         //Given
         TaskDto taskDto = new TaskDto(1L,"task","123");
+        TaskDto task2Dto = new TaskDto(2L,"task2", "234");
+        TaskDto task3Dto = new TaskDto(3L,"task3", "345");
         List<TaskDto> taskDtos = new ArrayList<>();
         taskDtos.add(taskDto);
+        taskDtos.add(task2Dto);
+        taskDtos.add(task3Dto);
         when(taskMapper.mapToTaskDtoList(dbService.getAllTasks())).thenReturn(taskDtos);
         //When & Then
         mockMvc.perform(get("/v1/task/getTasks").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("$",hasSize(1)));
+                .andExpect(jsonPath("$",hasSize(3)))
+                .andExpect(jsonPath("$[2].title",is ("task3")))
+                ;
     }
     @Test
     public void shouldGetSingleTask() throws Exception{
@@ -62,7 +68,9 @@ public class TaskControllerTestSuite {
         //When & Then
         mockMvc.perform(get("/v1/task/getTask?taskId=1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("$.title",is("task")));
+                .andExpect(jsonPath("$.title",is("task")))
+                .andExpect(jsonPath("$.content",is("123")))
+                .andExpect(jsonPath("$.id",is(1)));
     }
 
     @Test
@@ -78,7 +86,9 @@ public class TaskControllerTestSuite {
         mockMvc.perform(put("/v1/task/updateTask").contentType(MediaType.APPLICATION_JSON)
                 .content(jsonContent))
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("$.title",is("task23")));
+                .andExpect(jsonPath("$.title",is("task23")))
+                .andExpect(jsonPath("$.content",is("123")))
+                .andExpect(jsonPath("$.id",is(1)));
     }
     @Test
     public void shouldDeleteTask() throws Exception{
@@ -105,7 +115,9 @@ public class TaskControllerTestSuite {
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title",is("task")));
+                .andExpect(jsonPath("$.title",is("task")))
+                .andExpect(jsonPath("$.content",is("123")))
+                .andExpect(jsonPath("$.id",is(1)));
     }
 
 
