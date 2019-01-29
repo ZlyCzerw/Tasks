@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.util.Optional;
 
 @Service
@@ -19,10 +22,12 @@ public class SimpleEmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
+    @Autowired
+    private MailCreatorService mailCreatorService;
 
     public void send(final Mail mail) {
       try {
-          SimpleMailMessage mailMessage = createMailMessage(mail);
+          MimeMessagePreparator mailMessage = createMimeMessage(mail);
           javaMailSender.send(mailMessage);
           LOGGER.info("Message send succesfully");
       } catch (MailException e){
@@ -39,6 +44,22 @@ public class SimpleEmailService {
         Optional.ofNullable(mail.getToCc()).ifPresent(cc -> mailMessage.setCc(cc));
 
        return mailMessage;
+    }
+
+    public MimeMessagePreparator createMimeMessage(final Mail mail){
+        return mimeMessage -> {
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+            messageHelper.setTo(mail.getRecieverEmail());
+            messageHelper.setSubject(mail.getSubject());
+            messageHelper.setText(mail.getMessage());
+            Optional.ofNullable(mail.getToCc()).ifPresent(cc -> {
+                try {
+                    messageHelper.setCc(cc);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+            });
+        };
     }
 
 
