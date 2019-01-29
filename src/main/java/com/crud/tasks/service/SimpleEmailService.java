@@ -51,7 +51,7 @@ public class SimpleEmailService {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setTo(mail.getRecieverEmail());
             messageHelper.setSubject(mail.getSubject());
-            messageHelper.setText(mail.getMessage());
+            messageHelper.setText(mailCreatorService.buildTrelloCardEmail(mail.getMessage()));
             Optional.ofNullable(mail.getToCc()).ifPresent(cc -> {
                 try {
                     messageHelper.setCc(cc);

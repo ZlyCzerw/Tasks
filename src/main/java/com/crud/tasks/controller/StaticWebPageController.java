@@ -20,6 +20,7 @@ public class StaticWebPageController {
         model.put("minus", "-");
         model.put("plus", "+");
         model.put("equals", "=");
+        model.put("message", "no co jest ziomek?");
         return "index";
     }
 }
