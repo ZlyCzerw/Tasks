@@ -1,5 +1,7 @@
 package com.crud.tasks.service;
 
+import com.crud.tasks.config.AdminConfig;
+import com.crud.tasks.domain.Mail;
 import com.crud.tasks.domain.Task;
 import com.crud.tasks.domain.TaskDto;
 import com.crud.tasks.repository.TaskRepository;
@@ -14,6 +16,10 @@ import java.util.Optional;
 public class DBService {
     @Autowired
     private TaskRepository repository;
+    @Autowired
+    private SimpleEmailService simpleEmailService;
+    @Autowired
+    AdminConfig adminConfig;
 
     public List<Task> getAllTasks(){
         return repository.findAll();
@@ -22,6 +28,11 @@ public class DBService {
         return repository.findById(id).orElse(null);
     }
     public Task saveTask(final Task task){
+        Mail mail = new Mail(adminConfig.getAdminMail(),
+                "New task added",
+                "New card " + task.getTitle() + " has been added to your CRUD app",
+                null);
+        simpleEmailService.send(mail);
         return repository.save(task);
     }
     public void deleteTask(final Long id ){
