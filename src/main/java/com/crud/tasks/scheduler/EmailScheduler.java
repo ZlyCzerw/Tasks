@@ -27,7 +27,7 @@ public class EmailScheduler {
     public void sendInformationEmail(){
         long size =taskRepository.count();
         String taskForm = (size == 1) ? " task" : " tasks" ;
-        simpleEmailService.send(new Mail(adminConfig.getAdminMail(), SUBJECT, "Courently you've got: " + size + taskForm, null));
+        simpleEmailService.sendwelcome(new Mail(adminConfig.getAdminMail(), SUBJECT, "Courently you've got: " + size + taskForm, null));
     }
 
 
